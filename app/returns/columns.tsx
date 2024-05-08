@@ -1,8 +1,6 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import { DialogOverlay, DialogContent } from '@radix-ui/react-dialog';
-import { DialogDemo } from "../../components/users/user-edit";
 
 import { MoreHorizontal, ArrowUpDown } from 'lucide-react'
 
@@ -25,42 +23,112 @@ export type User = {
 
 export const columns: ColumnDef<User>[] = [
   {
-    accessorKey: 'Nombre',
+    accessorKey: 'Material Devuelto',
     header: ({ column }) => {
       return (
         <Button
           variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Nombre
+          Material Devuelto
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       )
     }
   },
   {
-    accessorKey: 'Rol',
+    accessorKey: 'Cantidad',
     header: ({ column }) => {
       return (
         <Button
           variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Rol
+          Cantidad
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       )
     }
   },
   {
-    accessorKey: 'Password',
+    accessorKey: 'Observación',
     header: ({ column }) => {
       return (
         <Button
           variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Password
+          Observación
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      )
+    }
+  },
+  {
+    accessorKey: 'Técnico Responsable',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Técnico Responsable
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      )
+    }
+  },
+  {
+    accessorKey: 'Código',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Código
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      )
+    }
+  },
+  {
+    accessorKey: 'Fecha de entrega',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Fecha de entrega
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      )
+    }
+  },
+  {
+    accessorKey: 'Bodega',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Bodega
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      )
+    }
+  },
+  {
+    accessorKey: 'Foto',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Foto
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       )
@@ -86,8 +154,7 @@ export const columns: ColumnDef<User>[] = [
             >
               Copiar ID
             </DropdownMenuItem>
-            {/* <DropdownMenuSeparator />
-            <DropdownMenuItem>Editar</DropdownMenuItem> */}
+            <DropdownMenuSeparator />
           </DropdownMenuContent>
         </DropdownMenu>
       )

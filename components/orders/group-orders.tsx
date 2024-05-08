@@ -39,14 +39,14 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
 }
 
-export function DataTable<TData, TValue>({
+export function GroupOrders<TData, TValue>({
   columns,
   data
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-
+  const [searchText, setSearchText] = useState<string>('')
   const table = useReactTable({
     data,
     columns,
@@ -64,6 +64,18 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel()
   })
 
+  const normalizeText = (text: string) => {
+    return text
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }
+  const filterData = (text: string) => {
+    const normalizedText = normalizeText(text)
+    table.setGlobalFilter(normalizedText)
+    setSearchText(text)
+  }
+
   return (
     <>
       {/* Filters */}
@@ -71,11 +83,9 @@ export function DataTable<TData, TValue>({
       <div className='flex items-center justify-between'>
         <div className='flex items-center py-4'>
           <Input
-            placeholder='Search by name...'
-            value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-            onChange={event =>
-              table.getColumn('name')?.setFilterValue(event.target.value)
-            }
+            placeholder='Buscar...'
+            value={searchText}
+            onChange={event => filterData(event.target.value)}
             className='max-w-sm'
           />
         </div>
@@ -84,7 +94,7 @@ export function DataTable<TData, TValue>({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant='outline' className='ml-auto'>
-              Columns
+              Columnas
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
@@ -119,9 +129,9 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   )
                 })}
@@ -151,7 +161,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className='h-24 text-center'
                 >
-                  No results.
+                  Sin resultados..
                 </TableCell>
               </TableRow>
             )}
@@ -167,7 +177,7 @@ export function DataTable<TData, TValue>({
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          Previous
+          Anterior
         </Button>
         <Button
           variant='outline'
@@ -175,7 +185,7 @@ export function DataTable<TData, TValue>({
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
-          Next
+          Siguiente
         </Button>
       </div>
     </>

@@ -1,23 +1,113 @@
-import { User, columns } from './columns'
-import { DataTable } from '@/components/data-table'
+'use client'
+import React, { useState, useEffect } from 'react';
+import UserForm from '../../components/users/user-form';
+import { DataTable } from '@/components/users/users-table';
+import { User, columns } from './columns';
+import axios from 'axios';
+import { useToast } from '@/components/ui/use-toast';
+import { SyncLoader } from 'react-spinners';
 
-async function getUsers(): Promise<User[]> {
-  const res = await fetch(
-    'https://64a6f5fc096b3f0fcc80e3fa.mockapi.io/api/users'
-  )
-  const data = await res.json()
-  return data
-}
+export default function Page() {
+  const [formData, setFormData] = useState(null);
+  const [data, setData] = useState<User[]>([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [Rol, setRol] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
 
-export default async function Page() {
-  const data = await getUsers()
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    setIsLoggedIn(isLoggedIn === 'true');
+    const Rol = localStorage.getItem('Rol');
+    if (Rol) {
+      setRol(Rol);
+    }
+
+    fetchData().then(data => {
+      setData(data);
+      setIsLoading(false);
+    });
+
+    if (!isLoggedIn) {
+      window.location.href = '/login';
+    }
+  }, []);
+
+  async function fetchData() {
+    try {
+      const response = await axios.get(
+        'http://45.173.228.31/api/get-data/1UliJqH6oNuZEk6l72r7alxHe5QOyYGS6ZzS8NtyfYP4/EQUIPO'
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error;
+    }
+  }
+
+  const handleSubmit = async (formData: any) => {
+    try {
+      const postData = {
+        userName: formData.userName,
+        accountType: formData.accountType,
+        password: formData.password
+      };
+      const response = await axios.post(
+        'http://45.173.228.31/api/insert-user',
+        postData
+      );
+
+      toast({
+        title: 'Éxito!',
+        description: 'Usuario creado exitosamente.'
+      });
+
+      console.log('POST Response:', response.data);
+      fetchData().then(data => setData(data));
+      setFormData(formData);
+      setIsLoggedIn(true);
+    } catch (error) {
+      toast({
+        title: 'Error!',
+        description: '¡Ups! Algo salió mal.'
+      });
+
+      console.error('Error submitting form:', error);
+      throw error;
+    }
+  };
 
   return (
-    <section className='py-24'>
-      <div className='container'>
-        <h1 className='mb-6 text-3xl font-bold'>All Users</h1>
-        <DataTable columns={columns} data={data} />
+    <section className='bg-gray-100 py-10'>
+      <div className='container mx-auto'>
+        <div className='grid grid-cols-1 gap-8 md:grid-cols-4 items-start'>
+          <div className='md:col-span-1'>
+            {isLoading ? (
+              <div className="spinner">
+                <SyncLoader color="#36D7B7" loading={isLoading} size={15} />
+              </div>
+            ) : isLoggedIn && Rol === 'Administrador' ? (
+              <UserForm onSubmit={handleSubmit} />
+            ) : isLoggedIn ? (
+              <p className='text-red-500'>
+                No tiene permisos necesarios para ver esta pantalla.
+              </p>
+            ) : (
+              <p className='text-red-500'>
+                Por favor, inicia sesión para acceder a esta página.
+              </p>
+            )}
+          </div>
+
+          <div className='md:col-span-3'>
+            <div className='rounded bg-white p-6 shadow-lg'>
+              {isLoggedIn && Rol === 'Administrador' && (
+                <DataTable columns={columns} data={data} />
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </section>
-  )
+  );
 }
