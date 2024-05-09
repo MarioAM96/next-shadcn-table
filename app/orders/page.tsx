@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { User, columns } from './columns';
 import { DataTable } from '@/components/orders/orders-table';
 import axios from 'axios';
-import { css } from '@emotion/react';
 import { SyncLoader } from 'react-spinners';
 
 export default function Page() {
@@ -29,17 +28,13 @@ export default function Page() {
     };
   }, []); // Empty dependency array to ensure this effect runs only once after initial render
 
-  const override = css`
-    display: block;
-    margin: 0 auto;
-  `;
 
   return (
     <section className='py-24 bg-gray-100'>
       <div className='container bg-white p-6 rounded shadow-lg'>
         {isLoading ? (
           <div className="spinner">
-            <SyncLoader color="#36D7B7" loading={isLoading} css={override} size={15} />
+            <SyncLoader color="#36D7B7" loading={isLoading} size={15} />
           </div>
         ) : (
           <DataTable columns={columns} data={data} />

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { DataTable } from '@/components/resume/resume-table';
 import { generateColumns, MaterialStock } from './columns';
-import { css } from '@emotion/react';
 import { SyncLoader } from 'react-spinners';
 
 async function getUsers(): Promise<MaterialStock[]> {
@@ -32,11 +31,6 @@ export default function Page() {
   const equipoKeys = data.length > 0 ? Object.keys(data[0].equipo) : [];
   const columns = generateColumns(equipoKeys);
 
-  const override = css`
-    display: block;
-    margin: 0 auto;
-  `;
-
   return (
     <section className='bg-gray-100 py-24'>
       <div className='container bg-white p-6 rounded shadow-lg'>
@@ -46,7 +40,7 @@ export default function Page() {
         </div>
         {isLoading ? (
           <div className="spinner">
-            <SyncLoader color="#36D7B7" loading={isLoading} css={override} size={15} />
+            <SyncLoader color="#36D7B7" loading={isLoading} size={15} />
           </div>
         ) : (
           <DataTable columns={columns} data={data} />
