@@ -19,10 +19,4 @@ jobs:
     - name: Build
       run: npm run build
 
-    - name: Deploy to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@releases/v3
-      with:
-        ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages  # Cambia "gh-pages" si quieres desplegar en otra rama
-        FOLDER: out  # Cambia "out" por la carpeta donde se encuentra la aplicación estática
-
+  
