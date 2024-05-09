@@ -43,7 +43,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends Record<string, any>, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -112,7 +112,7 @@ export function DataTable<TData, TValue>({
 
   async function handleSave() {
     if (editingRow) {
-      const postData = editingRow.original;
+      const postData: Record<string, any> = editingRow.original;
       postData["Status Entrega"] = "Entregado";
       try {
         const response = await axios.put(
@@ -131,6 +131,7 @@ export function DataTable<TData, TValue>({
       setEditingRow(null);
     }
   }
+
 
   function handleCancel() {
     setEditingRow(null);
@@ -156,7 +157,7 @@ export function DataTable<TData, TValue>({
                         <h2 className="text-lg font-semibold mb-4">Gestión de entregas</h2>
                         <label htmlFor="bodega" className="block text-sm font-medium text-gray-700">Bodega:</label>
                         <Select
-                          id="bodega"
+                          //id="bodega"
                           value={editingRow.original.Bodega || ''}
                           onValueChange={(value) => {
                             handleInputChange(value, 'Bodega');
